@@ -43,10 +43,10 @@ def generator(z, dim=16, reuse=True, training=True):
         y = tf.image.resize_bilinear(y, [98,98])
         y = conv_bn_relu(y, dim, 2, 1)
         y = tf.image.resize_bilinear(y, [100,100])
-       # if PARAMS.phase=='learning_prior':
-        #    y = y + tf.tile(tf.constant(noise1, dtype=tf.float32)/tf.reduce_max(y), (PARAMS.train_batch_size, 1, 1, 1))  #comment lines 46 47 48 49to turn off noise
-        #elif PARAMS.phase=='inference':
-         #   y = y + tf.tile(tf.constant(noise1, dtype=tf.float32)/tf.reduce_max(y), (PARAMS.batch_size, 1, 1, 1))
+        if PARAMS.phase=='learning_prior':
+            y = y + tf.tile(tf.constant(noise1, dtype=tf.float32)/tf.reduce_max(y), (PARAMS.train_batch_size, 1, 1, 1))  
+        elif PARAMS.phase=='inference':
+            y = y + tf.tile(tf.constant(noise1, dtype=tf.float32)/tf.reduce_max(y), (PARAMS.batch_size, 1, 1, 1))
         img = tf.tanh(tf.layers.conv2d(y, filters=4, kernel_size=3, padding='SAME',kernel_initializer=tf.initializers.glorot_normal()))                                      
         return img
 
